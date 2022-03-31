@@ -50,7 +50,11 @@ export default function IgtForm() {
     }
     function handleSubmit() {
         addDoc(signupCollection, formData)
-            .then(res => console.log(res))
+            .then(res => {
+                fetch(`https://us-central1-signups-2faef.cloudfunctions.net/sendMail?dest=${formData.email}&name=${formData.firstname}&product="something"`)
+                .then(resp=>console.log(resp))
+                .catch(e=>{return(e)})
+            })
             .catch(err => console.log(err))
     }
     function changeCV(e) {
@@ -131,7 +135,7 @@ export default function IgtForm() {
                         <Form.Control type="file" onChange={(e) => changeCV(e)} />
                     </Form.Group>
 
-                    <Button variant="primary" size="sm" type='submit'>
+                    <Button variant="primary" size="sm"  onClick={() => handleSubmit()}>
                         Submit
                     </Button>
                     <Button variant="primary" size="sm" onClick={() => setpage(page - 1)}>
@@ -147,7 +151,7 @@ export default function IgtForm() {
 
     return (
         <Card className=' card dropShadow'>
-            <Form onChange={handleChanges} onSubmit={() => handleSubmit()}>
+            <Form onChange={handleChanges} >
                 {PageHandler(formData, handleChanges)}
             </Form>
         </Card>

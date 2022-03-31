@@ -10,8 +10,8 @@ admin.initializeApp();
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "<EMAIL>",
-    pass: "<PASSWORD>",
+    user: "yashith98@gmail.com",
+    pass: "ldpcwhxborsqouyd",
   },
 });
 
@@ -19,12 +19,14 @@ exports.sendMail = functions.https.onRequest((req, res) => {
   cors(req, res, () => {
     // getting dest email by query string
     const dest = req.query.dest;
+    const name = req.query.name;
+    const product = req.query.prod;
 
     const mailOptions = {
       from: "Yashith <yashith98@gmail.com>",
       to: dest,
-      subject: "I'M A PICKLE!!!", // email subject
-      html: `<p style="font-size: 16px;">Pickle Riiiiiiiiiiiiiiiick!!</p>
+      subject: "You have successfully registered to " + product,
+      html: "<h1>Hi " + name + `</h1>
                 <br />
             `, // email content in HTML
     };
