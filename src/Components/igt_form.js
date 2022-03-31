@@ -51,9 +51,7 @@ export default function IgtForm() {
     function handleSubmit() {
         addDoc(signupCollection, formData)
             .then(res => {
-                fetch(`https://us-central1-signups-2faef.cloudfunctions.net/sendMail?dest=${formData.email}&name=${formData.firstname}&product="something"`)
-                .then(resp=>console.log(resp))
-                .catch(e=>{return(e)})
+                console.log(res)
             })
             .catch(err => console.log(err))
     }

@@ -10,33 +10,28 @@ admin.initializeApp();
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "yashith98@gmail.com",
-    pass: "ldpcwhxborsqouyd",
+    user: "",
+    pass: "",
   },
 });
 
-exports.sendMail = functions.https.onRequest((req, res) => {
-  cors(req, res, () => {
-    // getting dest email by query string
-    const dest = req.query.dest;
-    const name = req.query.name;
-    const product = req.query.prod;
-
-    const mailOptions = {
-      from: "Yashith <yashith98@gmail.com>",
-      to: dest,
-      subject: "You have successfully registered to " + product,
-      html: "<h1>Hi " + name + `</h1>
-                <br />
-            `, // email content in HTML
-    };
-
-    // returning result
-    return transporter.sendMail(mailOptions, (erro, info) => {
-      if (erro) {
-        return res.send(erro.toString());
-      }
-      return res.send("Sended");
+exports.autoSendEmail = functions.firestore
+    .document("/Signup details/{userId}")
+    .onCreate((snap, context) => {
+      const user = snap.data();
+      const mailOptions = {
+        from: "Yashith <yashith98@gmail.com>",
+        to: user.email,
+        subject: "You have successfully registered to Something",
+        html: `<h1>Hi ${user.firstname}</h1>
+                  <br />
+              `, // email content in HTML
+      };
+      transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+          functions.logger.error(err);
+        } else if (info) {
+          functions.logger.log(info);
+        }
+      });
     });
-  });
-});
