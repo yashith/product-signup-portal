@@ -1,0 +1,51 @@
+.card{
+    padding:20px;
+    flex: 1;
+    min-height:50%;
+    justify-content: center;
+}
+.dropShadow{
+    box-shadow: -5px 1px 10px rgba(88, 88, 88, 0.678) !important;
+}
+.formChange-enter{
+    opacity: 0.01;
+}
+.formChange-enter.formChange-enter-active {
+    opacity: 1;
+    transition: opacity 500ms ease-in;
+  }
+  
+  .formChange-leave {
+    opacity: 1;
+  }
+  
+  .formChange-leave.formChange-leave-active {
+    opacity: 0.01;
+    transition: opacity 300ms ease-in;
+  }
+  .google-button{
+    width: 100%;
+    border-top-right-radius: 25px !important;
+    border-bottom-right-radius: 25px !important;
+    border-top-left-radius: 25px !important;
+    border-bottom-left-radius: 25px !important;
+  }
+  .google-button>img{
+    height: 1.7em;
+    padding-right: 1em;
+  }
+  .flex{
+    display: flex;
+  }
+  .flex-center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  Button{
+    border-top-right-radius: 25px !important;
+    border-bottom-right-radius: 25px !important;
+    border-top-left-radius: 25px !important;
+    border-bottom-left-radius: 25px !important;
+    width: 100%;
+  }
