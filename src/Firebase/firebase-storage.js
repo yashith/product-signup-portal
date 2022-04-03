@@ -2,16 +2,16 @@ import { app } from "./firebase-config";
 import { getStorage, ref, uploadBytes, getDownloadURL } from '@firebase/storage'
 
 export function uploadFile(file) {
-    const storage = getStorage(app, "gs://signups-2faef.appspot.com/")
+    const storage = getStorage(app,process.env.REACT_APP_FIREBASE_STORAGE)
     const storageRef = ref(storage, 'cv/' + file.name)
     let url=''
-    uploadBytes(storageRef, file)
+    return uploadBytes(storageRef, file)
         .then((snapshot) => {
-            getDownloadURL(storageRef)
-                .then(u => url=u)
+           return getDownloadURL(storageRef)
+                .then(u => {return u})
         })
         .catch(err => {
-            console.log(err)
+           return err
         })
-        
+    
 }

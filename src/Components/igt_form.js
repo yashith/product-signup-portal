@@ -8,7 +8,7 @@ import { db } from './../Firebase/firebase-firestore'
 import { uploadFile } from '../Firebase/firebase-storage';
 
 export default function IgtForm() {
-    const [formData, setformData] = useState({ firstname: '', lastname: '', email: '', institute: '', education: '' })
+    const [formData, setformData] = useState({ firstname: '', lastname: '', email: '', institute: '', education: '',cv:''})
     const [page, setpage] = useState(1)
     const [cv, setcv] = useState()
     const [animdirection, setanimdirection] = useState()
@@ -63,6 +63,7 @@ export default function IgtForm() {
     }
     function uploadCV() {
         uploadFile(cv)
+        .then(url=>setformData({...formData,cv:url}))
     }
     function PageHandler(formData, handleChanges) {
         if (page === 1) {
@@ -123,7 +124,7 @@ export default function IgtForm() {
                 <>
                     <Form.Group controlId="formFile" className="mb-3">
                         <Form.Label>Upload CV</Form.Label>
-                        <Form.Control type="file" onChange={(e) => changeCV(e)} />
+                        <Form.Control name="cv" type="file" onChange={(e) => changeCV(e)} />
                     </Form.Group>
 
                     <Button variant="primary" size="sm" onClick={() => handleSubmit()}>
