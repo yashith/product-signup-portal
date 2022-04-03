@@ -11,6 +11,7 @@ export default function IgtForm() {
     const [formData, setformData] = useState({ firstname: '', lastname: '', email: '', institute: '', education: '' })
     const [page, setpage] = useState(1)
     const [cv, setcv] = useState()
+    const [animdirection, setanimdirection] = useState()
     const [inProp, setInProp] = useState(false);
     const signupCollection = collection(db, "Signup details")
 
@@ -60,7 +61,7 @@ export default function IgtForm() {
         setcv(e.target.files[0])
         console.log(e.target.files[0].webkitRelativePath);
     }
-    function uploadCV(){
+    function uploadCV() {
         uploadFile(cv)
     }
     function PageHandler(formData, handleChanges) {
@@ -90,9 +91,6 @@ export default function IgtForm() {
                         <Form.Label>Email</Form.Label>
                         <Form.Control name="email" type="email" placeholder="Email" value={formData.email} />
                     </Form.Group>
-                    <Button variant="primary" size="sm" onClick={() => { setpage(page + 1); setInProp(true) }}>
-                        Next
-                    </Button>
                 </>
             )
         }
@@ -116,12 +114,7 @@ export default function IgtForm() {
                         </Form.Select>
                     </Form.Group>
 
-                    <Button variant="primary" size="sm" onClick={() => setpage(page + 1)}>
-                        Next
-                    </Button>
-                    <Button variant="primary" size="sm" onClick={() => setpage(page - 1)}>
-                        Back
-                    </Button>
+
                 </>
             )
         }
@@ -133,11 +126,8 @@ export default function IgtForm() {
                         <Form.Control type="file" onChange={(e) => changeCV(e)} />
                     </Form.Group>
 
-                    <Button variant="primary" size="sm"  onClick={() => handleSubmit()}>
+                    <Button variant="primary" size="sm" onClick={() => handleSubmit()}>
                         Submit
-                    </Button>
-                    <Button variant="primary" size="sm" onClick={() => setpage(page - 1)}>
-                        Back
                     </Button>
                     <Button variant="primary" size="sm" onClick={() => uploadCV()}>
                         Upload
@@ -149,9 +139,33 @@ export default function IgtForm() {
 
     return (
         <Card className=' card dropShadow'>
-            <Form onChange={handleChanges} >
-                {PageHandler(formData, handleChanges)}
-            </Form>
+            <div className='card-inner'>
+                <Form onChange={handleChanges}>
+                    <div className={animdirection === 'left' ? 'slide-left' : animdirection === 'right' ? 'slide-right' : ''}>
+                        {PageHandler(formData, handleChanges)}
+                    </div>
+                    {page<3?<Button variant="primary" size="sm" onClick={() => {
+                        setanimdirection('left')
+                        setTimeout(() => {
+                            setpage(page + 1)
+                            setanimdirection(null)
+                        }, 500)
+                    }}>
+                        Next
+                    </Button>:<></>}
+                    {page>1?<Button variant="primary" size="sm" onClick={() =>{
+                        setanimdirection('right')
+                        setTimeout(() => {
+                            setpage(page - 1)
+                            setanimdirection(null)
+                        }, 500)
+                    }}>
+                        Back
+                    </Button>:<></>}
+                    
+                </Form>
+            </div>
+
         </Card>
     )
 }
