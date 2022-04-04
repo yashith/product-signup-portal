@@ -49,12 +49,13 @@ export default function IgtForm() {
         e.preventDefault();
         setformData({ ...formData, [e.target.name]: e.target.value })
     }
-    function handleSubmit() {
+    function handleSubmit(e) {
         addDoc(signupCollection, formData)
             .then(res => {
                 console.log(res)
             })
             .catch(err => console.log(err))
+            e.preventDefault()
     }
     function changeCV(e) {
         e.preventDefault();
@@ -127,7 +128,8 @@ export default function IgtForm() {
                         <Form.Control name="cv" type="file" onChange={(e) => changeCV(e)} />
                     </Form.Group>
 
-                    <Button variant="primary" size="sm" onClick={() => handleSubmit()}>
+                    {/* <Button variant="primary" size="sm" onClick={() => handleSubmit()}> */}
+                    <Button variant="primary" size="sm" type='submit'>
                         Submit
                     </Button>
                     <Button variant="primary" size="sm" onClick={() => uploadCV()}>
@@ -141,7 +143,7 @@ export default function IgtForm() {
     return (
         <Card className=' card dropShadow'>
             <div className='card-inner'>
-                <Form onChange={handleChanges}>
+                <Form onChange={handleChanges} onSubmit={handleSubmit}>
                     <div className={animdirection === 'left' ? 'slide-left' : animdirection === 'right' ? 'slide-right' : ''}>
                         {PageHandler(formData, handleChanges)}
                     </div>
