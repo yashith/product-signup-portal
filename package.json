@@ -16,6 +16,7 @@
     "react-router": "^6.2.2",
     "react-scripts": "5.0.0",
     "react-transition-group": "^4.4.2",
+    "sweetalert2": "^11.4.8",
     "web-vitals": "^2.1.0"
   },
   "scripts": {

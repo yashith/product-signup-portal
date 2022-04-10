@@ -53,7 +53,7 @@
   align-items: center;
 }
 
-Button {
+.round-button {
   border-top-right-radius: 25px !important;
   border-bottom-right-radius: 25px !important;
   border-top-left-radius: 25px !important;
@@ -68,6 +68,15 @@ Button {
 .slide-right {
   animation-name: right;
   animation-duration: 0.8s;
+}
+.loading{
+  margin-left: 10px;
+  height: 20px;
+  animation: rotation 2s infinite linear;
+}
+.rightImg{
+  margin-left: 10px;
+  height: 20px;
 }
 
 @keyframes left {
@@ -90,5 +99,13 @@ Button {
   100% {
     opacity: 0;
     transform: translateX(100%);
+  }
+}
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
   }
 }
