@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Form, Button, Card } from 'react-bootstrap'
+import { Form, Button, Card, Table } from 'react-bootstrap'
 import '../Components/igt-form.css'
 import { signInWithGoogle } from './../Firebase/firebase-auth';
 import { CSSTransition } from 'react-transition-group'
 import { collection, addDoc } from 'firebase/firestore'
 import { db } from './../Firebase/firebase-firestore'
-import { uploadFile } from '../Firebase/firebase-storage';
+import { uploadFile , deleteFile } from '../Firebase/firebase-storage';
 import Swal from 'sweetalert2';
 import rightImg from '../Components/correct.png'
 
@@ -16,8 +16,9 @@ export default function IgtForm() {
     const [animdirection, setanimdirection] = useState()
     const [fileUploading, setfileUploading] = useState(false);
     const [fileUploaded, setfileUploaded] = useState(false);
+    const [files, setfiles] = useState({ name: '', id: '' });
     const [validForm, setvalidForm] = useState(false);
-    const signupCollection = collection(db, "Signup details")
+    const signupCollection = collection(db, "Signup details");
 
     const instituteList = ["", "Ins 1", "Ins 2", "Ins 3", "Ins 4"]
     const eduList = ["", "Undergrad", "Grad", "Masters", "Other"]
@@ -79,11 +80,13 @@ export default function IgtForm() {
     function changeCV(e) {
         e.preventDefault();
         setcv(e.target.files[0])
-        console.log(e.target.files[0].webkitRelativePath);
+        // console.log(e.target.files[0].webkitRelativePath);
     }
-    function uploadCV() {
+    function uploadCV(e) {
+        e.target.blur()
         setfileUploading(true)
-        uploadFile(cv)
+        let fileId = Date.now()
+        uploadFile(cv, fileId)
             .then(url => {
                 setformData({ ...formData, cv: url })
                 Swal.fire({
@@ -95,6 +98,12 @@ export default function IgtForm() {
                 setfileUploading(false)
             })
             .then(res => setfileUploaded(true))
+            .then(res => {
+                setfiles({ ...files, 'name': cv.name, 'id': fileId })
+            })
+            .then(() => {
+                console.log(files)
+            })
             .catch(e => {
                 Swal.fire({
                     title: 'Uploading Failed',
@@ -103,6 +112,28 @@ export default function IgtForm() {
                     confirmButtonText: 'Ok'
                 })
             })
+    }
+    function deleteCV(name,id){
+        deleteFile(name,id)
+        .then(res=>{
+            Swal.fire({
+                title: 'File Deleted',
+                text: res,
+                icon: 'success',
+                confirmButtonText: 'Ok'
+            })
+        })
+        .then(res=>{
+            setfiles({...files,'name':'','id':''})
+        })
+        .catch(err => {
+            Swal.fire({
+                title: 'Error Occurred',
+                text: 'Please try again',
+                icon: 'error',
+                confirmButtonText: 'Ok'
+            })
+        })
     }
     function PageHandler(formData, handleChanges) {
         if (page === 1) {
@@ -168,14 +199,20 @@ export default function IgtForm() {
                     <Form.Group controlId="formFile" className="mb-3">
                         <Form.Label>Upload CV</Form.Label>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <Form.Control name="cv" type="file" onChange={(e) => changeCV(e)} />
+                            <Form.Control name="cv" type="file" onChange={(e) => changeCV(e)} disabled={files.name !== ''} />
                             <img hidden={!fileUploading} className='loading' src="https://img.icons8.com/color/48/000000/loading.png" />
-                            <img hidden={!fileUploaded} className='rightImg' src={rightImg} />
+                            <img hidden={!fileUploaded || (files.name === '')} className='rightImg' src={rightImg} />
                         </div>
                     </Form.Group>
+                    <Table>
+                        <tr style={{textAlign:'center'}}>
+                            <td>{files.name}</td>
+                            <td>{files.name!==''?<a onClick={()=>deleteCV(files.name,files.id)}><svg className='close-svg' xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg></a>:''}</td>
+                        </tr>
+                    </Table>
 
                     {/* <Button variant="primary" size="sm" onClick={() => handleSubmit()}> */}
-                    <Button variant="primary" size="sm" onClick={() => uploadCV()}>
+                    <Button variant="primary" size="sm" onClick={(e) => uploadCV(e)}>
                         Upload
                     </Button>
                 </>
@@ -191,8 +228,9 @@ export default function IgtForm() {
                         {PageHandler(formData, handleChanges)}
                     </div>
                 </Form>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '3%', padding:"10px" }}>
-                    {page > 1 ? <Button variant="primary" size="sm" onClick={() => {
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '3%', padding: "10px" }}>
+                    {page > 1 ? <Button className='nav-button' variant="outline-primary" size="sm" onClick={(e) => {
+                        e.target.blur()
                         setanimdirection('right')
                         setTimeout(() => {
                             setpage(page - 1)
@@ -201,7 +239,8 @@ export default function IgtForm() {
                     }}>
                         Back
                     </Button> : <></>}
-                    {page < 3 ? <Button variant="primary" size="sm" onClick={() => {
+                    {page < 3 ? <Button className='nav-button' variant="primary" size="sm" onClick={(e) => {
+                        e.target.blur()
                         setanimdirection('left')
                         setTimeout(() => {
                             setpage(page + 1)
