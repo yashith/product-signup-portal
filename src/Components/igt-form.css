@@ -5,11 +5,14 @@
   justify-content: center;
 }
 .card-inner{
+  padding-left: 5px;
+  padding-right: 5px;
   overflow: hidden;
 }
 
 .dropShadow {
-  box-shadow: -5px 1px 10px rgba(88, 88, 88, 0.678) !important;
+  /* box-shadow: -5px 1px 10px rgba(88, 88, 88, 0.678) !important; */
+  box-shadow: 0px 5px 15px #00000033!important;
 }
 
 .formChange-enter {
@@ -32,10 +35,11 @@
 
 .google-button {
   width: 100%;
-  border-top-right-radius: 25px !important;
+  /* border-top-right-radius: 25px !important;
   border-bottom-right-radius: 25px !important;
   border-top-left-radius: 25px !important;
-  border-bottom-left-radius: 25px !important;
+  border-bottom-left-radius: 25px !important; */
+  border-radius: 0.25rem !important;
 }
 
 .google-button>img {
