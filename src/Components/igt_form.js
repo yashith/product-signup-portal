@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect } from 'react';
 import { Form, Button, Card, Table } from 'react-bootstrap'
 import '../Components/igt-form.css'
 import { signInWithGoogle } from './../Firebase/firebase-auth';
@@ -23,6 +23,16 @@ export default function IgtForm() {
     const instituteList = ["", "Ins 1", "Ins 2", "Ins 3", "Ins 4"]
     const eduList = ["", "Undergrad", "Grad", "Masters", "Other"]
 
+    useEffect(() => {
+        if (formData.firstname !== '' && formData.lastname !== '' && formData.email !== '' && formData.institute !== '' && formData.education !== '') {
+            setvalidForm(true)
+        }
+        else{
+            setvalidForm(false)
+        }
+    
+    }, [formData])
+    
     async function handleGoogleButton(type) {
         //check the log in button type
         switch (type) {
@@ -53,9 +63,8 @@ export default function IgtForm() {
     function handleChanges(e) {
         e.preventDefault();
         setformData({ ...formData, [e.target.name]: e.target.value })
-        if (formData.firstname !== '' && formData.lastname !== '' && formData.email !== '' && formData.institute !== '' && formData.education !== '') {
-            setvalidForm(true)
-        }
+        
+        
     }
     function handleSubmit(e) {
         addDoc(signupCollection, formData)
@@ -75,7 +84,7 @@ export default function IgtForm() {
                     confirmButtonText: 'Ok'
                 })
             })
-        e.preventDefault()
+        //e.preventDefault()
     }
     function changeCV(e) {
         e.preventDefault();
@@ -88,21 +97,43 @@ export default function IgtForm() {
         let fileId = Date.now()
         uploadFile(cv, fileId)
             .then(url => {
-                setformData({ ...formData, cv: url })
+                
+                let data = { ...formData, cv: url }
+                return data
+            })
+            .then(data => {
                 Swal.fire({
                     title: 'Uploaded!',
                     text: 'File Uploaded successfully',
                     icon: 'success',
                     confirmButtonText: 'Ok'
                 })
-                setfileUploading(false)
+                return data
             })
+            .then(data => {
+                addDoc(signupCollection, data)
+                    .then(res => {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: 'Registered successfully',
+                            icon: 'success',
+                            confirmButtonText: 'Ok'
+                        })
+                    })
+                    .catch(err => {
+                        Swal.fire({
+                            title: 'Failed',
+                            text: 'Error Occurred',
+                            icon: 'error',
+                            confirmButtonText: 'Ok'
+                        })
+                    })
+            }
+            )
             .then(res => setfileUploaded(true))
+            .then(res => setfileUploading(false))
             .then(res => {
                 setfiles({ ...files, 'name': cv.name, 'id': fileId })
-            })
-            .then(() => {
-                console.log(files)
             })
             .catch(e => {
                 Swal.fire({
@@ -112,6 +143,7 @@ export default function IgtForm() {
                     confirmButtonText: 'Ok'
                 })
             })
+        e.preventDefault()
     }
     function deleteCV(name, id) {
         deleteFile(name, id)
@@ -207,16 +239,16 @@ export default function IgtForm() {
                     <Table>
                         <tr style={{ textAlign: 'center' }}>
                             <td>{files.name}</td>
-                            <td>{files.name !== '' ? <a onClick={() => deleteCV(files.name, files.id)}><svg className='close-svg' xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none" /><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" /></svg></a> : ''}</td>
+                            {/* <td>{files.name !== '' ? <a onClick={() => deleteCV(files.name, files.id)}><svg className='close-svg' xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none" /><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" /></svg></a> : ''}</td> */}
                         </tr>
                     </Table>
 
                     {/* <Button variant="primary" size="sm" onClick={() => handleSubmit()}> */}
-                    <div style={{ display: 'flex', justifyContent: 'end', marginTop: '3%', padding: "10px" }}>
+                    {/* <div style={{ display: 'flex', justifyContent: 'end', marginTop: '3%', padding: "10px" }}>
                         <Button variant="primary" size="sm" onClick={(e) => uploadCV(e)}>
                             Upload File
                         </Button>
-                    </div>
+                    </div> */}
                 </>
             )
         }
@@ -225,15 +257,15 @@ export default function IgtForm() {
     return (
         <Card className=' card dropShadow'>
             <div className='card-inner'>
-                <Form onChange={handleChanges} onSubmit={handleSubmit}>
+                <Form onChange={handleChanges} onSubmit={uploadCV}>
                     <div className={animdirection === 'left' ? 'slide-left' : animdirection === 'right' ? 'slide-right' : ''}>
                         {PageHandler(formData, handleChanges)}
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'center', marginTop: '3%', padding: "10px" }}>
-                    {page === 3 ? <Button className="submit-button" variant="success" size="sm" type='submit' disabled={!validForm}>
-                        Submit
-                    </Button> : <></>}
-                </div>
+                        {page === 3 ? <Button className="submit-button" variant="success" size="sm" type='submit' disabled={!validForm}>
+                            Submit
+                        </Button> : <></>}
+                    </div>
                 </Form>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '3%', padding: "10px" }}>
                     {page > 1 ? <Button className='nav-button' variant="outline-primary" size="sm" onClick={(e) => {
@@ -257,7 +289,7 @@ export default function IgtForm() {
                         Next
                     </Button> : <></>}
                 </div>
-                
+
             </div>
 
         </Card>
