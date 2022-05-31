@@ -4,8 +4,8 @@
 }
 .timeline-title{
     padding-left: 2%;
-    color:white;
-    font:bold;
+    color:black;
+    font-weight: 500;
 }
 .timeline-icon{
     width: 10%;

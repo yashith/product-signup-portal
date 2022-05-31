@@ -1,4 +1,4 @@
-import React, { useState ,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button, Card, Table } from 'react-bootstrap'
 import '../Components/igt-form.css'
 import { signInWithGoogle } from './../Firebase/firebase-auth';
@@ -7,7 +7,7 @@ import { collection, addDoc } from 'firebase/firestore'
 import { db } from './../Firebase/firebase-firestore'
 import { uploadFile, deleteFile } from '../Firebase/firebase-storage';
 import Swal from 'sweetalert2';
-import rightImg from '../Components/correct.png'
+import rightImg from '../Components/correct.png';
 
 export default function IgtForm() {
     const [formData, setformData] = useState({ firstname: '', lastname: '', email: '', institute: '', education: '', cv: '' })
@@ -27,12 +27,12 @@ export default function IgtForm() {
         if (formData.firstname !== '' && formData.lastname !== '' && formData.email !== '' && formData.institute !== '' && formData.education !== '') {
             setvalidForm(true)
         }
-        else{
+        else {
             setvalidForm(false)
         }
-    
+
     }, [formData])
-    
+
     async function handleGoogleButton(type) {
         //check the log in button type
         switch (type) {
@@ -63,8 +63,8 @@ export default function IgtForm() {
     function handleChanges(e) {
         e.preventDefault();
         setformData({ ...formData, [e.target.name]: e.target.value })
-        
-        
+
+
     }
     function handleSubmit(e) {
         addDoc(signupCollection, formData)
@@ -97,7 +97,7 @@ export default function IgtForm() {
         let fileId = Date.now()
         uploadFile(cv, fileId)
             .then(url => {
-                
+
                 let data = { ...formData, cv: url }
                 return data
             })

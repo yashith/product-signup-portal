@@ -8,7 +8,7 @@ export default function Details() {
         <Container>
             <Row style={{paddingBottom:"5%"}}>
                 <Col md-12>
-                    <h2 style={{ color: "white" , textAlign:"center"}}><b>The Process</b></h2>
+                    <h2 style={{ color: "black" , textAlign:"center"}}><b>The Process</b></h2>
                 </Col>
             </Row>
             <Row>

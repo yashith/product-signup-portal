@@ -1,12 +1,15 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap');
 
 .App {
   text-align: center;
   font-family: 'Lato', sans-serif !important;
-  background: #0F2027;  /* fallback for old browsers */
-background: -webkit-linear-gradient(to right, #2C5364, #203A43, #0F2027);  /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to right, #2C5364, #203A43, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  font-weight: 300;
+  background: #0F2027;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #2C5364, #203A43, #0F2027);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #2C5364, #203A43, #0F2027);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
 }
 
@@ -40,6 +43,7 @@ background: linear-gradient(to right, #2C5364, #203A43, #0F2027); /* W3C, IE 10+
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
