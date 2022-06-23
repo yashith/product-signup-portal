@@ -1,16 +1,18 @@
-.main{
+.main {
     height: 100vh !important;
     margin-top: auto;
     margin-bottom: auto;
-    font-family: 'Lato', sans-serif ;
+    font-family: 'Lato', sans-serif;
     font-weight: 1000;
     margin-left: 0;
     margin-right: 0;
     padding: 10;
 }
-.al{
-    height:25%;
-} 
+
+.al {
+    height: 25%;
+}
+
 .logo {
     height: 25%;
     padding-top: 2%;
@@ -21,22 +23,55 @@
     display: flex;
     justify-content: flex-end;
 }
-.wrapper-background{
+
+.logo img {
+    height: 10vw;
+}
+
+.wrapper-background {
     /* aspect-ratio: 960/540; */
     width: 100%;
     background-repeat: no-repeat;
-    background-position: center;
+    background-position: right 0vw bottom 0vh;
     background-size: cover;
     background-image: url('./Images/GT/blob-scene-haikei.svg');
     overflow-y: hidden;
 
 }
-.full-row{
+
+.full-row {
     height: 100%;
 }
-.col-center{
+
+.col-center {
     display: flex;
     align-items: center;
 }
 
-
+@media only screen and (max-width: 1100px) {
+    .logo img {
+        height: 15vw;
+    }
+}
+@media only screen and (max-width: 765px) {
+    .detail-col {
+        display: none;
+    }
+    .logo img {
+        height: 20vw;
+    }
+}
+@media only screen and (max-width: 400px) {
+    .logo {
+        padding-top: 2%;
+        padding-right: 2%;
+        width: 100%;
+        position: absolute;
+        left: 0px;
+        display: flex;
+        justify-content: flex-end;
+    }
+    .logo img {
+        height: 20vw;
+    }
+}

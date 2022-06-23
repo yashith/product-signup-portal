@@ -8,17 +8,18 @@ import logo from './Images/GT/product_GT-Vertical-white.png'
 export default function FormContainer() {
     return (
         <div className='wrapper-background'>
+            <div className='logo'>
+                <img src={logo}></img>
+            </div>
             <Container className='main'>
                 {/* <Row className='al'>
                 </Row> */}
-                <div className='logo'>
-                    <img src={logo}></img>
-                </div>
+
                 <Row className='full-row'>
-                    <Col xs="7" className='col-center'>
-                        <Details/>
+                    <Col xs="7" className='col-center detail-col'>
+                        <Details />
                     </Col>
-                    <Col xs="5" className='col-center'>
+                    <Col xs="12" md="5" className='col-center'>
                         <IgtForm />
                     </Col>
                 </Row>
