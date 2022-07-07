@@ -8,9 +8,10 @@ import { db } from './../Firebase/firebase-firestore'
 import { uploadFile, deleteFile } from '../Firebase/firebase-storage';
 import Swal from 'sweetalert2';
 import rightImg from '../Components/correct.png';
+import {useNavigate} from 'react-router-dom';
 
-export default function IgtForm() {
-    const [formData, setformData] = useState({ firstname: '', lastname: '', email: '', institute: '', education: '', cv: '', method: '', phoneNumber: '' })
+export default function IgtForm(props) {
+    const [formData, setformData] = useState({ firstname: '', lastname: '', email: '', institute: '', education: '', cv: '', method: '', phoneNumber: '', instituteName: '', field: '', entity:props.entity})
     const [page, setpage] = useState(1)
     const [cv, setcv] = useState()
     const [animdirection, setanimdirection] = useState()
@@ -18,14 +19,17 @@ export default function IgtForm() {
     const [fileUploaded, setfileUploaded] = useState(false);
     const [files, setfiles] = useState({ name: '', id: '' });
     const [validForm, setvalidForm] = useState(false);
-    const [validFileSize, setvalidFileSize]= useState(true);
+    const [validFileSize, setvalidFileSize] = useState(true);
     const signupCollection = collection(db, "Signup details");
 
-    const instituteList = ["", "Ins 1", "Ins 2", "Ins 3", "Ins 4"]
-    const eduList = ["", "Undergrad", "Grad", "Masters", "Other"]
-    const methods = ["", "From a friend", "Event", "Email", "Facebook", "Instagram", "Linkedin", "Other social media", "Media (Magazine, TV, Newspaper or Radio)", "University Session", "Search Engine", "Information booth on campus", " Other"]
+    const instituteList = ["", "School", "University", "Other"]
+    const eduList = ["", "Undergraduate", "Graduate", "Masters", "Other"]
+    const methods = ["", "From a friend", "Event", "Email", "Facebook", "Instagram", "Linkedin", "Other social media", "Media (Magazne, TV, Newspaper or Radio)", "University Session", "Search Engine", "Information booth on campus", " Other"]
+
+    const navigate = useNavigate();
+
     useEffect(() => {
-        if (formData.firstname !== '' && formData.lastname !== '' && formData.email !== '' && formData.institute !== '' && formData.education !== '' && validFileSize) {
+        if (formData.firstname !== '' && formData.lastname !== '' && formData.email !== '' && formData.institute !== '' && formData.education !== '' && formData.phoneNumber !== '' && formData.instituteName !== '' && formData.field !== '' && validFileSize) {
             setvalidForm(true)
         }
         else {
@@ -89,9 +93,9 @@ export default function IgtForm() {
     }
     function changeCV(e) {
         e.preventDefault();
-        if (e.target.files[0]!=null && e.target.files[0].size > 5000000) {
+        if (e.target.files[0] != null && e.target.files[0].size > 5000000) {
             setvalidFileSize(false)
-            e.target.files[0]=null
+            e.target.files[0] = null
         }
         else {
             setvalidFileSize(true)
@@ -104,54 +108,82 @@ export default function IgtForm() {
         e.target.blur()
         setfileUploading(true)
         let fileId = Date.now()
-        uploadFile(cv, fileId)
-            .then(url => {
+        if (formData.cv != '') {
+            uploadFile(cv, fileId)
+                .then(url => {
 
-                let data = { ...formData, cv: url }
-                return data
-            })
-            .then(data => {
-                Swal.fire({
-                    title: 'Uploaded!',
-                    text: 'File Uploaded successfully',
-                    icon: 'success',
-                    confirmButtonText: 'Ok'
+                    let data = { ...formData, cv: url }
+                    return data
                 })
-                return data
-            })
-            .then(data => {
-                addDoc(signupCollection, data)
-                    .then(res => {
-                        Swal.fire({
-                            title: 'Success!',
-                            text: 'Registered successfully',
-                            icon: 'success',
-                            confirmButtonText: 'Ok'
-                        })
+                .then(data => {
+                    Swal.fire({
+                        title: 'Uploaded!',
+                        text: 'File Uploaded successfully',
+                        icon: 'success',
+                        confirmButtonText: 'Ok'
                     })
-                    .catch(err => {
-                        Swal.fire({
-                            title: 'Failed',
-                            text: 'Error Occurred',
-                            icon: 'error',
-                            confirmButtonText: 'Ok'
-                        })
-                    })
-            }
-            )
-            .then(res => setfileUploaded(true))
-            .then(res => setfileUploading(false))
-            .then(res => {
-                setfiles({ ...files, 'name': cv.name, 'id': fileId })
-            })
-            .catch(e => {
-                Swal.fire({
-                    title: 'Uploading Failed',
-                    text: 'Please try again',
-                    icon: 'error',
-                    confirmButtonText: 'Ok'
+                    return data
                 })
-            })
+                .then(data => {
+                    addDoc(signupCollection, data)
+                        .then(res => {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Registered successfully',
+                                icon: 'success',
+                                confirmButtonText: 'Ok',
+                                closeOnConfirm: false
+                            })
+                            .then(()=>{
+                               window.location.reload()
+                            })
+                        })
+                        .catch(err => {
+                            Swal.fire({
+                                title: 'Failed',
+                                text: 'Error Occurred',
+                                icon: 'error',
+                                confirmButtonText: 'Ok'
+                            })
+                        })
+                }
+                )
+                .then(res => setfileUploaded(true))
+                .then(res => setfileUploading(false))
+                .then(res => {
+                    setfiles({ ...files, 'name': cv.name, 'id': fileId })
+                })
+                .catch(e => {
+                    Swal.fire({
+                        title: 'Uploading Failed',
+                        text: 'Please try again',
+                        icon: 'error',
+                        confirmButtonText: 'Ok'
+                    })
+                })
+        }
+        else {
+            addDoc(signupCollection, formData)
+                .then(res => {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Registered successfully',
+                        icon: 'success',
+                        confirmButtonText: 'Ok'
+                    }).then(()=>{
+                        window.location.reload()
+                    })
+                })
+                .catch(err => {
+                    Swal.fire({
+                        title: 'Failed',
+                        text: 'Error Occurred',
+                        icon: 'error',
+                        confirmButtonText: 'Ok'
+                    })
+                })
+        }
+
         e.preventDefault()
     }
     function deleteCV(name, id) {
@@ -205,7 +237,7 @@ export default function IgtForm() {
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="PhoneNumber">
                         <Form.Label>Phone Number <span style={{ color: 'red' }}>*</span></Form.Label>
-                        <Form.Control name="phoneNumber" type="phoneNumber" placeholder="PhoneNumber" value={formData.phoneNumber} />
+                        <Form.Control name="phoneNumber" type="text" placeholder="PhoneNumber" value={formData.phoneNumber} />
                     </Form.Group>
                 </>
             )
@@ -223,6 +255,10 @@ export default function IgtForm() {
                             })}
                         </Form.Select>
                     </Form.Group>
+                    <Form.Group className="mb-3" controlId="instituteName">
+                        <Form.Label>Name of the Institute <span style={{ color: 'red' }}>*</span></Form.Label>
+                        <Form.Control name="instituteName" type="text" placeholder="Institute" value={formData.instituteName} />
+                    </Form.Group>
                     <Form.Group className="mb-3" controlId="education">
                         <Form.Label>Education <span style={{ color: 'red' }}>*</span></Form.Label>
                         <Form.Select name="education" value={formData.education} >
@@ -231,16 +267,10 @@ export default function IgtForm() {
                             })}
                         </Form.Select>
                     </Form.Group>
-                    <Form.Group className="mb-3" controlId="where">
-                        <Form.Label>Where did you hear about AIESEC <span style={{ color: 'red' }}>*</span></Form.Label>
-                        <Form.Select name="method" value={formData.method} >
-                            {methods.map(method => {
-                                return (<option key={method} value={method}>{method}</option>)
-                            })}
-                        </Form.Select>
+                    <Form.Group className="mb-3" controlId="field">
+                        <Form.Label>Field of Study <span style={{ color: 'red' }}>*</span></Form.Label>
+                        <Form.Control name="field" type="text" placeholder="Engineering , A/L" value={formData.field} />
                     </Form.Group>
-
-
                 </>
             )
         }
@@ -249,14 +279,22 @@ export default function IgtForm() {
                 <>
                     <h4><b>CV</b></h4>
                     <hr style={{ width: '100%' }}></hr>
+                    <Form.Group className="mb-3" controlId="where">
+                        <Form.Label>Where did you hear about AIESEC <span style={{ color: 'red' }}>*</span></Form.Label>
+                        <Form.Select name="method" value={formData.method} >
+                            {methods.map(method => {
+                                return (<option key={method} value={method}>{method}</option>)
+                            })}
+                        </Form.Select>
+                    </Form.Group>
                     <Form.Group controlId="formFile" className="mb-3">
                         <Form.Label>Upload CV</Form.Label>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <Form.Control name="cv" type="file"  onChange={(e) => changeCV(e)} disabled={files.name !== ''} />
+                            <Form.Control name="cv" type="file" onChange={(e) => changeCV(e)} disabled={files.name !== ''} />
                             <img hidden={!fileUploading} className='loading' src="https://img.icons8.com/color/48/000000/loading.png" />
                             <img hidden={!fileUploaded || (files.name === '')} className='rightImg' src={rightImg} />
                         </div>
-                        <label hidden={validFileSize} style={{color:'red',fontSize:'small'}}>File is larger than 5MB</label>
+                        <label hidden={validFileSize} style={{ color: 'red', fontSize: 'small' }}>File is larger than 5MB</label>
                     </Form.Group>
                     <Table>
                         <tr style={{ textAlign: 'center' }}>
