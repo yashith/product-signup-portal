@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 import rightImg from '../Components/correct.png';
 
 export default function IgtForm() {
-    const [formData, setformData] = useState({ firstname: '', lastname: '', email: '', institute: '', education: '', cv: '' })
+    const [formData, setformData] = useState({ firstname: '', lastname: '', email: '', institute: '', education: '', cv: '', method: '', phoneNumber: '' })
     const [page, setpage] = useState(1)
     const [cv, setcv] = useState()
     const [animdirection, setanimdirection] = useState()
@@ -18,13 +18,14 @@ export default function IgtForm() {
     const [fileUploaded, setfileUploaded] = useState(false);
     const [files, setfiles] = useState({ name: '', id: '' });
     const [validForm, setvalidForm] = useState(false);
+    const [validFileSize, setvalidFileSize]= useState(true);
     const signupCollection = collection(db, "Signup details");
 
     const instituteList = ["", "Ins 1", "Ins 2", "Ins 3", "Ins 4"]
     const eduList = ["", "Undergrad", "Grad", "Masters", "Other"]
-
+    const methods = ["", "From a friend", "Event", "Email", "Facebook", "Instagram", "Linkedin", "Other social media", "Media (Magazine, TV, Newspaper or Radio)", "University Session", "Search Engine", "Information booth on campus", " Other"]
     useEffect(() => {
-        if (formData.firstname !== '' && formData.lastname !== '' && formData.email !== '' && formData.institute !== '' && formData.education !== '') {
+        if (formData.firstname !== '' && formData.lastname !== '' && formData.email !== '' && formData.institute !== '' && formData.education !== '' && validFileSize) {
             setvalidForm(true)
         }
         else {
@@ -41,7 +42,7 @@ export default function IgtForm() {
                     let data = await signInWithGoogle()
                     console.log(data)
                     const names = await nameParser(data.user.displayName)
-                    await setformData({ ...formData, 'email': data.user.email, 'firstname': names[0], 'lastname': names[1] })
+                    await setformData({ ...formData, 'email': data.user.email, 'firstname': names[0], 'lastname': names[1], 'phoneNumber': data.user.phoneNumber })
                     await setpage(page + 1)
                 }
                 catch (err) {
@@ -88,8 +89,16 @@ export default function IgtForm() {
     }
     function changeCV(e) {
         e.preventDefault();
-        setcv(e.target.files[0])
-        // console.log(e.target.files[0].webkitRelativePath);
+        if (e.target.files[0]!=null && e.target.files[0].size > 5000000) {
+            setvalidFileSize(false)
+            e.target.files[0]=null
+        }
+        else {
+            setvalidFileSize(true)
+            setcv(e.target.files[0])
+            //console.log(e.target.files[0]);
+        }
+
     }
     function uploadCV(e) {
         e.target.blur()
@@ -181,11 +190,11 @@ export default function IgtForm() {
                         <hr style={{ width: '100%' }} />
                     </div>
 
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Group className="mb-3" controlId="fname">
                         <Form.Label>First Name <span style={{ color: 'red' }}>*</span></Form.Label>
                         <Form.Control name="firstname" type="text" placeholder="First name" value={formData.firstname} />
                     </Form.Group>
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Group className="mb-3" controlId="lname">
                         <Form.Label>Last Name <span style={{ color: 'red' }}>*</span></Form.Label>
                         <Form.Control name="lastname" type="text" placeholder="Last name" value={formData.lastname} />
                     </Form.Group>
@@ -193,6 +202,10 @@ export default function IgtForm() {
                     <Form.Group className="mb-3" controlId="Email">
                         <Form.Label>Email <span style={{ color: 'red' }}>*</span></Form.Label>
                         <Form.Control name="email" type="email" placeholder="Email" value={formData.email} />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="PhoneNumber">
+                        <Form.Label>Phone Number <span style={{ color: 'red' }}>*</span></Form.Label>
+                        <Form.Control name="phoneNumber" type="phoneNumber" placeholder="PhoneNumber" value={formData.phoneNumber} />
                     </Form.Group>
                 </>
             )
@@ -202,7 +215,7 @@ export default function IgtForm() {
                 <>
                     <h4><b>Education Qualification</b></h4>
                     <hr style={{ width: '100%' }}></hr>
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Group className="mb-3" controlId="institute">
                         <Form.Label>Institute <span style={{ color: 'red' }}>*</span></Form.Label>
                         <Form.Select name="institute" value={formData.institute} >
                             {instituteList.map(ins => {
@@ -210,11 +223,19 @@ export default function IgtForm() {
                             })}
                         </Form.Select>
                     </Form.Group>
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Group className="mb-3" controlId="education">
                         <Form.Label>Education <span style={{ color: 'red' }}>*</span></Form.Label>
                         <Form.Select name="education" value={formData.education} >
                             {eduList.map(ed => {
                                 return (<option key={ed} value={ed}>{ed}</option>)
+                            })}
+                        </Form.Select>
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="where">
+                        <Form.Label>Where did you hear about AIESEC <span style={{ color: 'red' }}>*</span></Form.Label>
+                        <Form.Select name="method" value={formData.method} >
+                            {methods.map(method => {
+                                return (<option key={method} value={method}>{method}</option>)
                             })}
                         </Form.Select>
                     </Form.Group>
@@ -231,10 +252,11 @@ export default function IgtForm() {
                     <Form.Group controlId="formFile" className="mb-3">
                         <Form.Label>Upload CV</Form.Label>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <Form.Control name="cv" type="file" onChange={(e) => changeCV(e)} disabled={files.name !== ''} />
+                            <Form.Control name="cv" type="file"  onChange={(e) => changeCV(e)} disabled={files.name !== ''} />
                             <img hidden={!fileUploading} className='loading' src="https://img.icons8.com/color/48/000000/loading.png" />
                             <img hidden={!fileUploaded || (files.name === '')} className='rightImg' src={rightImg} />
                         </div>
+                        <label hidden={validFileSize} style={{color:'red',fontSize:'small'}}>File is larger than 5MB</label>
                     </Form.Group>
                     <Table>
                         <tr style={{ textAlign: 'center' }}>
