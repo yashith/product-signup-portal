@@ -1,7 +1,8 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import Details from '../Components/details';
-import IgtForm from './../Components/igt_form';
+import OgtForm from '../Components/oGT/ogt_form';
+import OgvForm from '../Components/oGV/ogv_form';
 import './formcontainer.css'
 import logo from './Images/GT/product_GT-Vertical-white.png'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -24,10 +25,16 @@ export default function FormContainer() {
                     <Col xs="12" md="5" className='col-center'>
                         <BrowserRouter>
                             <Routes>
-                                <Route exact path="/" element={<IgtForm entity = "" />} />
+                                <Route exact path="/oGT" element={<OgtForm entity = "" />} />
                                 {
                                     entities.map(entity => {
-                                        return <Route path={"/" + entity} element={<IgtForm entity={entity} />} />
+                                        return <Route path={"/oGT/" + entity} element={<OgtForm entity={entity} />} />
+                                    })
+                                }
+                                <Route exact path="/oGV" element={<OgvForm entity = "" />} />
+                                {
+                                    entities.map(entity => {
+                                        return <Route path={"/oGV/" + entity} element={<OgvForm entity={entity} />} />
                                     })
                                 }
                             </Routes>

@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Card, Table } from 'react-bootstrap'
-import '../Components/igt-form.css'
-import { signInWithGoogle } from './../Firebase/firebase-auth';
+import './ogv-form.css'
+import { signInWithGoogle } from '../../Firebase/firebase-auth';
 import { CSSTransition } from 'react-transition-group'
 import { collection, addDoc } from 'firebase/firestore'
-import { db } from './../Firebase/firebase-firestore'
-import { uploadFile, deleteFile } from '../Firebase/firebase-storage';
+import { db } from '../../Firebase/firebase-firestore'
+import { uploadFile, deleteFile } from '../../Firebase/firebase-storage';
 import Swal from 'sweetalert2';
-import rightImg from '../Components/correct.png';
+import rightImg from '../correct.png';
 import {useNavigate} from 'react-router-dom';
 
-export default function IgtForm(props) {
+export default function OgvForm(props) {
     const [formData, setformData] = useState({ firstname: '', lastname: '', email: '', institute: '', education: '', cv: '', method: '', phoneNumber: '', instituteName: '', field: '', entity:props.entity})
     const [page, setpage] = useState(1)
     const [cv, setcv] = useState()
@@ -20,7 +20,7 @@ export default function IgtForm(props) {
     const [files, setfiles] = useState({ name: '', id: '' });
     const [validForm, setvalidForm] = useState(false);
     const [validFileSize, setvalidFileSize] = useState(true);
-    const signupCollection = collection(db, "Signup details");
+    const signupCollection = collection(db, "oGV Signups");
 
     const instituteList = ["", "School", "University", "Other"]
     const eduList = ["", "Undergraduate", "Graduate", "Masters", "Other"]
@@ -29,6 +29,7 @@ export default function IgtForm(props) {
     const navigate = useNavigate();
 
     useEffect(() => {
+        document.title = "Globle Volunteer"
         if (formData.firstname !== '' && formData.lastname !== '' && formData.email !== '' && formData.institute !== '' && formData.education !== '' && formData.phoneNumber !== '' && formData.instituteName !== '' && formData.field !== '' && validFileSize) {
             setvalidForm(true)
         }

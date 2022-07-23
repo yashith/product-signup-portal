@@ -1,0 +1,132 @@
+.card {
+  padding: 20px;
+  flex: 1;
+  min-height: 50%;
+  justify-content: center;
+}
+.card-inner{
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow: hidden;
+}
+
+.dropShadow {
+  /* box-shadow: -5px 1px 10px rgba(88, 88, 88, 0.678) !important; */
+  box-shadow: 0px 5px 15px #00000033!important;
+}
+
+.formChange-enter {
+  opacity: 0.01;
+}
+
+.formChange-enter.formChange-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.formChange-leave {
+  opacity: 1;
+}
+
+.formChange-leave.formChange-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
+}
+
+.google-button {
+  width: 100%;
+  /* border-top-right-radius: 25px !important;
+  border-bottom-right-radius: 25px !important;
+  border-top-left-radius: 25px !important;
+  border-bottom-left-radius: 25px !important; */
+  border-radius: 0.25rem !important;
+}
+
+.google-button>img {
+  height: 1.7em;
+  padding-right: 1em;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.round-button {
+  border-top-right-radius: 25px !important;
+  border-bottom-right-radius: 25px !important;
+  border-top-left-radius: 25px !important;
+  border-bottom-left-radius: 25px !important;
+  width: 100%;
+}
+
+.slide-left {
+  animation-name: left;
+  animation-duration: 0.8s;
+}
+.slide-right {
+  animation-name: right;
+  animation-duration: 0.8s;
+}
+.loading{
+  margin-left: 10px;
+  height: 20px;
+  animation: rotation 2s infinite linear;
+}
+.rightImg{
+  margin-left: 10px;
+  height: 20px;
+}
+.nav-button {
+  width:5rem;
+  border-top-right-radius: 25px !important;
+  border-bottom-right-radius: 25px !important;
+  border-top-left-radius: 25px !important;
+  border-bottom-left-radius: 25px !important;
+}
+.submit-button {
+  width:10rem;
+  border-top-right-radius: 25px !important;
+  border-bottom-right-radius: 25px !important;
+  border-top-left-radius: 25px !important;
+  border-bottom-left-radius: 25px !important;
+}
+.close-svg:hover{
+  fill: rgb(209, 116, 116);
+}
+
+@keyframes left {
+  0% {
+    opacity: 1;
+    transform: translateX(0%);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+}
+@keyframes right {
+  0% {
+    opacity: 1;
+    transform: translateX(0%);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
