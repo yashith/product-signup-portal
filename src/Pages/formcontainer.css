@@ -28,7 +28,7 @@
     height: 10vw;
 }
 
-.wrapper-background {
+.wrapper-background-oGT {
     /* aspect-ratio: 960/540; */
     width: 100%;
     background-repeat: no-repeat;
@@ -38,6 +38,17 @@
     overflow-y: hidden;
 
 }
+.wrapper-background-oGV {
+    /* aspect-ratio: 960/540; */
+    width: 100%;
+    background-repeat: no-repeat;
+    background-position: right 0vw bottom 0vh;
+    background-size: cover;
+    background-image: url('./Images/GV/blob-scene-haikei.svg');
+    overflow-y: hidden;
+
+}
+
 
 .full-row {
     height: 100%;

@@ -48,7 +48,9 @@ export default function OgvForm(props) {
                     console.log(data)
                     const names = await nameParser(data.user.displayName)
                     await setformData({ ...formData, 'email': data.user.email, 'firstname': names[0], 'lastname': names[1], 'phoneNumber': data.user.phoneNumber })
-                    await setpage(page + 1)
+                    if(data.user.phoneNumber!=null){
+                        await setpage(page + 1)
+                    }
                 }
                 catch (err) {
                     //change to a modal 
